@@ -29,6 +29,9 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew install criterion
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11' 
     - name: Meson Build
       uses: BSFishy/meson-build@v1.0.3
       with:
