@@ -1,0 +1,34 @@
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v1
+    - name: Install Criterion on Ubuntu
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install libcriterion-dev
+    - name: Install Criterion on macOS
+      if: runner.os == 'macOS'
+      run: |
+        brew update
+        brew install libcriterion
+    - name: Meson Build
+      uses: BSFishy/meson-build@v1.0.3
+      with:
+        action: test
