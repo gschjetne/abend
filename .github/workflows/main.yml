@@ -27,7 +27,7 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew update
-        brew install libcriterion
+        brew install criterion
     - name: Meson Build
       uses: BSFishy/meson-build@v1.0.3
       with:
