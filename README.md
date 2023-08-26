@@ -1,3 +1,5 @@
+[![.github/workflows/main.yml](https://github.com/gschjetne/abend/actions/workflows/main.yml/badge.svg)](https://github.com/gschjetne/abend/actions/workflows/main.yml)
+
 # Abend
 
 Abend aims to eventually become a simple text editor
