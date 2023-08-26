@@ -32,4 +32,8 @@ void gb_move_left(struct gbuffer *gb);
 
 void gb_move_right(struct gbuffer *gb);
 
+void gb_delete_left(struct gbuffer *gb);
+
+void gb_delete_right(struct gbuffer *gb);
+
 #endif

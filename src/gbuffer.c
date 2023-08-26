@@ -77,6 +77,18 @@ void gb_move_right(struct gbuffer *gb) {
     }
 }
 
+void gb_delete_left(struct gbuffer *gb) {
+    if (gb->gap_start > 0) {
+        gb->gap_start--;
+    }
+}
+
+void gb_delete_right(struct gbuffer *gb) {
+    if (gb->gap_end < gb->buffer_length) {
+        gb->gap_end++;
+    }
+}
+
 void grow(struct gbuffer *gb) {
     size_t new_length = gb->buffer_length * 2;
     size_t suffix_length = gb->buffer_length - gb->gap_end;

@@ -125,3 +125,44 @@ Test(gbuffer, middle_insert) {
     gb_destroy(&gb);
     free(str);
 }
+
+Test(gbuffer, delete) {
+    struct gbuffer gb;
+    char *str;
+
+    gb_init(&gb, 16);
+
+    gb_write(&gb, "Hello");
+
+    gb_move_left(&gb);
+    gb_move_left(&gb);
+    gb_move_left(&gb);
+
+    gb_delete_left(&gb);
+    gb_delete_left(&gb);
+
+    cr_expect_eq(gb_cursor_pos(&gb), 0, "the cursor is not at the home position");
+    cr_expect_eq(gb_char_length(&gb), 3, "the buffer is not 3 characters long");
+
+    gb_write(&gb, "Guten Abend");
+
+    str = malloc(gb_char_length(&gb) + 1);
+
+    gb_to_string(&gb, str);
+
+    cr_expect_str_eq(str, "Guten Abendllo");
+
+    size_t col = gb_cursor_pos(&gb);
+
+    gb_delete_right(&gb);
+    gb_delete_right(&gb);
+    gb_delete_right(&gb);
+
+    cr_expect_eq(gb_cursor_pos(&gb), col, "the cursor moved during right delete");
+    free(str);
+    str = malloc(gb_char_length(&gb));
+
+    gb_to_string(&gb, str);
+
+    cr_expect_str_eq(str, "Guten Abend");
+}
