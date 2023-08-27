@@ -166,3 +166,29 @@ Test(gbuffer, delete) {
 
     cr_expect_str_eq(str, "Guten Abend");
 }
+
+Test(gbuffer, move_zero_gap) {
+    struct gbuffer gb;
+    char *expected = "hello";
+    char actual[6];
+
+    gb_init(&gb, 5);
+
+    gb_write(&gb, expected);
+
+    cr_expect_eq(gb.gap_end - gb.gap_start, 0);
+
+    for (int i = 0; i < 5; i++) {
+        gb_move_left(&gb);
+        gb_to_string(&gb, actual);
+
+        cr_expect_str_eq(actual, expected);
+    }
+
+    for (int i = 0; i < 5; i++) {
+        gb_move_right(&gb);
+        gb_to_string(&gb, actual);
+
+        cr_expect_str_eq(actual, expected);
+    }
+}
