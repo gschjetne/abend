@@ -2,17 +2,20 @@
  *  Licensed under the GPLv3, see COPYING.md for details
  */
 
+#include "gbuffer.h"
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "gbuffer.h"
 
-void grow(struct gbuffer *gb);
+void gb_grow(struct gbuffer *gb);
 
 void gb_init(struct gbuffer *gb, size_t size) {
     gb->buffer = malloc(size);
-    if (gb->buffer == NULL)
+    if (gb->buffer == NULL) {
+        perror("gb_init");
         exit(EXIT_FAILURE);
+    }
 
     gb->gap_start = 0;
     gb->gap_end = size;
@@ -33,9 +36,7 @@ size_t gb_char_length(struct gbuffer *gb) {
     return gb_byte_length(gb);
 }
 
-size_t gb_cursor_pos(struct gbuffer *gb) {
-    return gb->gap_start;
-}
+size_t gb_cursor_pos(struct gbuffer *gb) { return gb->gap_start; }
 
 void gb_to_string(struct gbuffer *gb, char *dest) {
     size_t prefix_length = gb->gap_start;
@@ -50,7 +51,7 @@ void gb_to_string(struct gbuffer *gb, char *dest) {
 void gb_write(struct gbuffer *gb, char *src) {
     while (*src) {
         if (gb->gap_end - gb->gap_start == 0) {
-            grow(gb);
+            gb_grow(gb);
         }
 
         gb->buffer[gb->gap_start] = *src;
@@ -89,14 +90,16 @@ void gb_delete_right(struct gbuffer *gb) {
     }
 }
 
-void grow(struct gbuffer *gb) {
+void gb_grow(struct gbuffer *gb) {
     size_t new_length = gb->buffer_length * 2;
     size_t suffix_length = gb->buffer_length - gb->gap_end;
     size_t new_gap_end = new_length - suffix_length;
 
     gb->buffer = realloc(gb->buffer, new_length);
-    if (gb->buffer == NULL)
+    if (gb->buffer == NULL) {
+        perror("gb_grow");
         exit(EXIT_FAILURE);
+    }
 
     memcpy(gb->buffer + new_gap_end, gb->buffer + gb->gap_end, suffix_length);
 
